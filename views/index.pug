@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  each helper in helpers
+    h2= helper.title
+    h4= helper.subtitle
+    each line in helper.line
+      p= line
