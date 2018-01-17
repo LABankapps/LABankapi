@@ -195,6 +195,15 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+  //getAll
+  recordRoutes.get('/all', function(req, res, next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      RecordController.getAll(req, res, next);
+    })(req, res, next);
+  });
+  
   //getbyUserId
   recordRoutes.get('/:id', function(req, res, next){
     passport.authenticate('jwt', function(err, user, info){
@@ -203,7 +212,6 @@ module.exports = function(app) {
       RecordController.getByUserId(req, res, next);
     })(req, res, next);
   });
-
 
 // Set url for API group routes
   app.use('/', apiRoutes, function(req, res) { index('API', [{ title: '/auth', subtitle: '', line: ['/register', '/login']},{ title: '/users', subtitle: '', line: ['/', '/+id']}], res) });

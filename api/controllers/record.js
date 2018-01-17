@@ -45,3 +45,14 @@ exports.update = function (req, res, next) {
     });
   }
 };
+
+exports.getAll = function (req, res, next) {
+  Record.find((err, records) => {
+    if (err) {
+      res.status(400).json({ error: 'Something gone wrong.' });
+      return next(err);
+    }
+    
+    return res.status(200).json({ records: records });
+  });
+};
