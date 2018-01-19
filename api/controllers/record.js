@@ -1,4 +1,5 @@
 const Record = require('../models/record');
+const setRecordInfo = require('../_helpers/setRecordInfo');
 
 //= =======================================
 // Record Routes
@@ -35,7 +36,7 @@ exports.getByUserId = function (req, res, next) {
 
 exports.update = function (req, res, next) {
   if(req){
-    Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record,recordUpdate) => {
+    Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record, recordUpdate) => {
       if (err) {
         res.status(400).json({ error: 'Something gone wrong.' });
         return next(err);
@@ -44,4 +45,23 @@ exports.update = function (req, res, next) {
       return res.status(200).json({ record: record });
     });
   }
+};
+
+exports.getAll = function (req, res, next) {
+  Record.find((err, records) => {
+    if (err) {
+      res.status(400).json({ error: 'Something gone wrong.' });
+      return next(err);
+    }
+
+    for(record of records){ //Hack syncrhone #Horrible code
+      if(record === records[records.length -1]){
+        record = setRecordInfo.setRecordInfo(record, () => {
+          return res.status(200).json({ records: records });
+        });
+      }else{
+        record = setRecordInfo.setRecordInfo(record);
+      }
+    }
+  });
 };

@@ -197,6 +197,15 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+  //getAll
+  recordRoutes.get('/all', function(req, res, next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      RecordController.getAll(req, res, next);
+    })(req, res, next);
+  });
+  
   //getbyUserId
   recordRoutes.get('/:id', function(req, res, next){
     passport.authenticate('jwt', function(err, user, info){
@@ -206,6 +215,7 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+<<<<<<< HEAD
   apiRoutes.use('/blockchain', blockchainRoutes, function(req, res){ index('blockChain Provider', [], res)});
 
   blockchainRoutes.get('/sender', function(req,res,next){
@@ -319,6 +329,8 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+=======
+>>>>>>> 105906ac08628c45a1e8d349629ab4b12ab897ab
 // Set url for API group routes
   app.use('/', apiRoutes, function(req, res) { index('API', [{ title: '/auth', subtitle: '', line: ['/register', '/login']},{ title: '/users', subtitle: '', line: ['/', '/+id']}], res) });
 };
