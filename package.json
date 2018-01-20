@@ -2,7 +2,7 @@
   "name": "LABankapi",
   "version": "1.0.0",
   "scripts": {
-    "deploy" : "node ./contracts/deploy.js",
+    "deploy" : "node ./api/controllers/deploy-blockchain.js",
     "call" : "node ./contracts/call.js",
     "start": "node ./config/www",
     "dev": "nodemon ./config/www"
