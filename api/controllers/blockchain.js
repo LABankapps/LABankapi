@@ -99,7 +99,7 @@ exports.insertUser = function(req,res,next){
     web3.eth.personal.unlockAccount(coinbase, "", function(err) {
       Labank.methods.insertUser().send({from :coinbase, gas: 1000000 }, function(err, transactionHash){
         if(err) return next(err);
-        return res.status(200).json({result : transactionHash});
+        return res.status(200).json({ uad : transactionHash }); //je veux le derner user 
       });
     });
   });
