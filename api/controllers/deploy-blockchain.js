@@ -18,4 +18,4 @@ web3.eth.getCoinbase().then(function(coinbase){
         .on('error', console.error);
     });
   });
-}); 
+});

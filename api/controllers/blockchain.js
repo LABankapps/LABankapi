@@ -1,7 +1,7 @@
 let Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
 const localhost = "http://localhost:8545";
-const contractAddress = "0x2Bfe786a22199A167AAbDA98A43982642ECF3423"; //returned after deploy
+const contractAddress = "0x8dc01960Ad157B9daE6F42083eF356ed84E24757"; //returned after deploy
 const nullAddress = "0x0000000000000000000000000000000000000000";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
 const Labank = new web3.eth.Contract(compiledContract.abi, contractAddress);
@@ -84,13 +84,17 @@ exports.getBalanceOf = function(req,res,next){
 
 exports.setGreeter = function(req,res,next){
   web3.eth.getCoinbase().then(function(coinbase){
-    web3.eth.personal.unlockAccount(coinbase, "").then(function(result){
-      let bytes32 = web3.utils.utf8ToHex(req.body.greet);
-      Labank.methods.setGreeter(bytes32).send({ from : coinbase, gas:1000000 }, function(err, transactionHash){
-        if(err) return next(err);
-        return res.status(200).json({result : transactionHash});
-      });
+    console.log(coinbase);
+
+    let bytes32 = web3.utils.utf8ToHex(req.body.greet);
+    Labank.methods.setGreeter(bytes32).send({ from : coinbase, gas:1000000 }, function(err, transactionHash){
+      if(err) return next(err);
+      return res.status(200).json({result : transactionHash});
     });
+
+    // web3.eth.personal.unlockAccount(coinbase, "").then(function(result){
+    //
+    // });
   });
 };
 
@@ -134,7 +138,7 @@ exports.removeSkill = function(req,res,next){
 exports.transfer = function(req,res,next){
   web3.eth.getCoinbase().then(function(coinbase){
     web3.eth.personal.unlockAccount(coinbase, "", function(err) {
-      Labank.methods.transfer(req.body.to, req.body.amount).send({ from : coinbase, gas : 1000000 }, function(err, transactionHash){
+      Labank.methods.transfer(req.body.from, req.body.to, req.body.amount).send({ from : coinbase, gas : 1000000 }, function(err, transactionHash){
         if(err) return next(err);
         return res.status(200).json({result : transactionHash});
       });
