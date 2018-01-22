@@ -1,7 +1,7 @@
 let Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
 const localhost = "http://localhost:8545";
-const contractAddress = "0x8dc01960Ad157B9daE6F42083eF356ed84E24757"; //returned after deploy
+const contractAddress = "0x37818182C09D5A80026cce573EB0da3F5b8b7042"; //returned after deploy
 const nullAddress = "0x0000000000000000000000000000000000000000";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
 const Labank = new web3.eth.Contract(compiledContract.abi, contractAddress);
@@ -85,25 +85,33 @@ exports.getBalanceOf = function(req,res,next){
 exports.setGreeter = function(req,res,next){
   web3.eth.getCoinbase().then(function(coinbase){
     console.log(coinbase);
-
-    let bytes32 = web3.utils.utf8ToHex(req.body.greet);
-    Labank.methods.setGreeter(bytes32).send({ from : coinbase, gas:1000000 }, function(err, transactionHash){
-      if(err) return next(err);
-      return res.status(200).json({result : transactionHash});
+    web3.eth.personal.unlockAccount(coinbase, "").then(function(result){
+      let bytes32 = web3.utils.utf8ToHex(req.body.greet);
+      Labank.methods.setGreeter(bytes32).send({ from : coinbase, gas:1000000 }, function(err, transactionHash){
+        if(err) return next(err);
+        return res.status(200).json({result : transactionHash});
+      });
     });
-
-    // web3.eth.personal.unlockAccount(coinbase, "").then(function(result){
-    //
-    // });
   });
 };
 
 exports.insertUser = function(req,res,next){
   web3.eth.getCoinbase().then(function(coinbase){
     web3.eth.personal.unlockAccount(coinbase, "", function(err) {
-      Labank.methods.insertUser().send({from :coinbase, gas: 1000000 }, function(err, transactionHash){
+      Labank.methods.insertUser(0).send({from :coinbase, gas: 1000000 }, function(err, transactionHash){
         if(err) return next(err);
-        return res.status(200).json({result : transactionHash});
+        console.log("hash : " + transactionHash);
+        Labank.methods.getLastUser().call({ from : ""}, function(err, uid){
+          if(err) return next(err);
+          else{
+            Labank.methods.getUser(uid).call({ from : ""}, function(err, address){
+              if(err) return next(err);
+              else{
+                return res.status(200).json({result : address});
+              }
+            });
+          }
+        });
       });
     });
   });
