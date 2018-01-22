@@ -107,7 +107,7 @@ exports.insertUser = function(req,res,next){
             Labank.methods.getUser(uid).call({ from : ""}, function(err, address){
               if(err) return next(err);
               else{
-                return res.status(200).json({result : address});
+                return res.status(200).json({uad : address});
               }
             });
           }

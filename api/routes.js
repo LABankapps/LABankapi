@@ -215,6 +215,10 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+  //=========================
+  // Blockchain Routes
+  //=========================
+
   apiRoutes.use('/blockchain', blockchainRoutes, function(req, res){ index('blockChain Provider', [], res)});
 
   blockchainRoutes.get('/sender', function(req,res,next){

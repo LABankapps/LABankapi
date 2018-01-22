@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
       type: String,
       enum: ['M', 'F', 'O'],
       default: 'M'
+    },
+    blockChainId: {
+      type: String,
+      trim: true,
     }
   },
   password: {
