@@ -18,21 +18,12 @@ function getUser(address){
 }
 
 exports.getSkills = function(req,res,next){
-<<<<<<< HEAD
-  if(!req.params.address) return res.status(422).json({error : "Missing address"});
-  if(!web3.isAddress(req.params.address)) return res.status(422).json({result : "invalid address" });
+  if(!req.params.address) return res.status(422).json({ "error" : "Missing address"});
+  if(!web3.isAddress(req.params.address) || !getUser(req.params.address) ) return res.status(422).json({ "error" : "invalid address" });
   else{
     var result = Labank.getSkills(req.params.address);
     var array = [];
-    if(!Array.isArray(result)) return res.status(300).json({error : "Skills have to be an array"});
-=======
-  if(!req.params.address) return res.status(422).json({result : "Missing address"});
-  if(!web3.isAddress(req.params.address) || !getUser(req.params.address) ) return res.status(422).json({ result : "invalid address" });
-  else{
-    var result = Labank.getSkills(req.params.address);
-    var array = [];
-    if(!Array.isArray(result)) return res.status(300).json({ result : "Skills have to be an array" });
->>>>>>> 8ccdd5ef55d9102788900dccf5dc43fed9fa11eb
+    if(!Array.isArray(result)) return res.status(300).json({ "error" : "Skills have to be an array" });
     else{
       for(let skill of result){
         array.push({ name : web3.toAscii(skill).replace(/\0/g, '') });
