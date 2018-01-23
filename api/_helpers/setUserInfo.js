@@ -6,6 +6,7 @@ exports.setUserInfo = function setUserInfo(request) {
     lastName: request.profile.lastName,
     phone: request.profile.phone,
     gender: request.profile.gender,
+    blockChainId: request.profile.blockChainId,
     email: request.email,
     role: request.role
   };

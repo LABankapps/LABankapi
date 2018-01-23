@@ -6,9 +6,11 @@ exports.setRecordInfo = function setRecordInfo(record, ...callback){
     record.from = user.email;
     Engine.findById(record.engine, (err, engine) => {
        record.engine = engine.name;
-       if(callback.length > 0){
-         callback[0]();
-       }
+       (() => {
+         if(callback.length > 0){
+           callback[0]();
+         }
+       })();
      });
   });
 }

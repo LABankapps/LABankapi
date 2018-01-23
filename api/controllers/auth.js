@@ -56,11 +56,17 @@ exports.register = function(req, res, next) {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const password = req.body.password;
+  const blockChainId = req.body.blockChainId;
   const role = req.body.role || "Member";
 
   // Return error if no email provided
   if (!email) {
     return res.status(422).send({ error: 'Veuillez rentrer une adresse email.'});//You must enter an email address.
+  }
+
+  // Return error if no blockChainId provided
+  if (!blockChainId) {
+    return res.status(422).send({ error: 'Adresse blockChain introuvable.'});//You must enter an blockChain address.
   }
 
   // Return error if full name not provided
@@ -90,7 +96,7 @@ exports.register = function(req, res, next) {
       let user = new User({
         email: email,
         password: password,
-        profile: { firstName: firstName, lastName: lastName },
+        profile: { firstName: firstName, lastName: lastName, blockChainId: blockChainId },
         role : role
       });
 
