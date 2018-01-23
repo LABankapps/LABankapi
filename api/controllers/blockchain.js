@@ -94,7 +94,6 @@ exports.removeSkill = function(req,res,next){
 };
 
 exports.transfer = function(req,res,next){
-<<<<<<< HEAD
   if(!req.params.amount) return res.status(422).json({ "error" : "missing amount" });
   if(!req.params.to) return res.status(422).json({ "error" : "missing user address" });
   if(!web3.isAddress(req.params.to) || !getUser(req.params.to) ) return res.status(422).json({ "error" : "invalid address" });
