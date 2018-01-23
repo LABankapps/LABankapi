@@ -189,7 +189,7 @@ module.exports = function(app) {
   apiRoutes.use('/records', recordRoutes, function(req, res) { index('API - api/records', [{ title: '/update', subtitle: 'Example :', line: ['{', '"from": "xxxx",', '"endDate": "xxxxxx",', '"stardDate": "xxxxxxx" // Optional', '}']}, {title: '/getByUserId', subtitle: 'Example :', line: [ 'return some records' ]}], res) });
 
   //updateRecord
-  recordRoutes.put('/approve/:id', function(req, res, next){
+  recordRoutes.put('/:id', function(req, res, next){
     passport.authenticate('jwt', function(err, user, info){
       if (!user) { return res.status(401).send({ error: info.error }) }
 
