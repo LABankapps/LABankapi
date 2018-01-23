@@ -238,10 +238,16 @@ module.exports = function(app) {
 
   blockchainRoutes.get('/balanceOf/:address', function(req,res,next){
     passport.authenticate('jwt', function(err, user, info){
-      //if (!user) { return res.status(401).send({ error: info.error }) }
+      if (!user) { return res.status(401).send({ error: info.error }) }
 
       blockChainController.getBalanceOf(req,res,next);
     })(req, res, next);
+  });
+
+  //SETTERS
+
+  blockchainRoutes.post('/user', function(req,res,next){
+    blockChainController.insertUser(req,res,next);
   });
 
   blockchainRoutes.post('/skill/:address/:skill', function(req,res,next){
@@ -260,15 +266,15 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
-  blockchainRoutes.post('/transfer', function(req,res,next){
+  blockchainRoutes.post('/transfer/:to/:amount', function(req,res,next){
     passport.authenticate('jwt', function(err, user, info){
-      //if (!user) { return res.status(401).send({ error: info.error }) }
+      if (!user) { return res.status(401).send({ error: info.error }) }
 
       blockChainController.transfer(req,res,next);
     })(req, res, next);
   });
 
-  blockchainRoutes.post('/reduce/:to/:amount', function(req,res,next){
+  blockchainRoutes.post('/reduce/:from/:amount', function(req,res,next){
     passport.authenticate('jwt', function(err, user, info){
       if (!user) { return res.status(401).send({ error: info.error }) }
 
