@@ -1,5 +1,6 @@
 const Record = require('../models/record');
 const setRecordInfo = require('../_helpers/setRecordInfo');
+const blockChainController = require("./blockchain");
 
 //= =======================================
 // Record Routes
@@ -21,7 +22,6 @@ exports.create = function(from, engine, date, duration, price){
 
 exports.getByUserId = function (req, res, next) {
   const userId = req.params.id;
-
   Record.find((err, records) => {
     if (err) {
       res.status(400).json({ error: 'Something gone wrong.' });
@@ -34,17 +34,33 @@ exports.getByUserId = function (req, res, next) {
   });
 };
 
-exports.update = function (req, res, next) {
-  if(req){
-    Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record, recordUpdate) => {
-      if (err) {
-        res.status(400).json({ error: 'Something gone wrong.' });
+exports.approveTransacation = function (req, res, next) {
+  Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record, recordUpdate) => {
+    if (err) {
+      res.status(400).json({ error: "Can't find record"});
+      return next(err);
+    }
+    setRecordInfo.FindUser(record.from, (err, user) => {
+      if(err){
+        res.status(400).json({ error: "Can't find user" });
         return next(err);
       }
-
-      return res.status(200).json({ record: record });
+      if(user.blockChainId){
+        var balance = blockChainController.getBalance(user.blockChainId);
+        console.log(balance);
+        if(balance >= record.price){
+          //process to paiement
+          blockChainController.pay(user.blockchain, record.price, (err, transactionHash) => {
+            if(err){
+              res.status(400).json({ error: "Can't find user" });
+              return next(err);
+            }
+            return res.status(200).json({ result : transactionHash });
+          });
+        }
+      }
     });
-  }
+  });
 };
 
 exports.getAll = function (req, res, next) {

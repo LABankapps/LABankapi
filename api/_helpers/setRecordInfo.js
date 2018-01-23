@@ -14,3 +14,10 @@ exports.setRecordInfo = function setRecordInfo(record, ...callback){
      });
   });
 }
+
+exports.FindUser = function(uid, callback){
+  User.findById(uid, (err, user) => {
+    if(err || !user) callback(err);
+    else callback(null, user);
+  });
+}
