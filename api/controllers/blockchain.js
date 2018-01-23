@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0x5d28d57999879f8c0e3fd98c0676f5f5af80c32d"; //returned after deploy
+const contractAddress = "0xf5dbcfb03f006d1be0cb680421e63b4e64ae2160"; //returned after deploy
 const nullAddress = "0x0000000000000000000000000000000000000000";
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
@@ -10,12 +10,12 @@ const Labank = Contract.at(contractAddress); // instantiate by address
 const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
 exports.getSkills = function(req,res,next){
-  if(!req.params.address) return res.status(422).json({result : "Missing address"});
+  if(!req.params.address) return res.status(422).json({error : "Missing address"});
   if(!web3.isAddress(req.params.address)) return res.status(422).json({result : "invalid address" });
   else{
     var result = Labank.getSkills(req.params.address);
     var array = [];
-    if(!Array.isArray(result)) return res.status(300).json({result : "Skills have to be an array"});
+    if(!Array.isArray(result)) return res.status(300).json({error : "Skills have to be an array"});
     else{
       for(let skill of result){
         array.push({ name : web3.toAscii(skill).replace(/\0/g, '') });
@@ -76,9 +76,9 @@ exports.removeSkill = function(req,res,next){
 };
 
 exports.transfer = function(req,res,next){
-  if(!req.params.to) return res.status(422).json({ result : "missing params" });
-  if(!req.params.address) return res.status(422).json({ result : "missing user address" });
-  if(!web3.isAddress(req.params.address)) return res.status(422).json({ result : "invalid address" });
+  if(!req.params.to) return res.status(422).json({ error : "Adresse utilisateur manquante" });
+  if(!req.params.amount) return res.status(422).json({ error : "Montant manquant" });
+  if(!web3.isAddress(req.params.to)) return res.status(422).json({ error : "invalid address" });
   else{
     Labank.transfer(req.params.to, req.params.amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return next(err);
