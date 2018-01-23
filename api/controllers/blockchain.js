@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0x5d28d57999879f8c0e3fd98c0676f5f5af80c32d"; //returned after deploy
+const contractAddress = "0xf5dbcfb03f006d1be0cb680421e63b4e64ae2160"; //returned after deploy
 const nullAddress = "0x0000000000000000000000000000000000000000";
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
@@ -94,6 +94,7 @@ exports.removeSkill = function(req,res,next){
 };
 
 exports.transfer = function(req,res,next){
+<<<<<<< HEAD
   if(!req.params.amount) return res.status(422).json({ "error" : "missing amount" });
   if(!req.params.to) return res.status(422).json({ "error" : "missing user address" });
   if(!web3.isAddress(req.params.to) || !getUser(req.params.to) ) return res.status(422).json({ "error" : "invalid address" });
