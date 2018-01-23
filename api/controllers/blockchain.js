@@ -11,7 +11,7 @@ const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
 exports.getSkills = function(req,res,next){
   if(!req.body.address) return next("missing user address");
-  if(!web3.isAddress(req.params.address) return next("invalid address");
+  if(!web3.isAddress(req.params.address)) return next("invalid address");
   else{
     var result = Labank.getSkills(req.params.address);
     var array;
@@ -27,7 +27,7 @@ exports.getSkills = function(req,res,next){
 
 exports.getBalanceOf = function(req,res,next){
   if(!req.body.address) return next("missing user address");
-  if(!web3.isAddress(req.params.address) return next("invalid address");
+  if(!web3.isAddress(req.params.address)) return next("invalid address");
   else{
     var result = Labank.balanceOf(req.params.address);
     var balance = result.toNumber();
@@ -51,7 +51,7 @@ exports.insertUser = function(req,res,next){
 exports.addSkill = function(req,res,next){
   if(!req.body.skill) return next("missing params");
   if(!req.body.address) return next("missing user address");
-  if(!web3.isAddress(req.body.address) return next("invalid address");
+  if(!web3.isAddress(req.body.address)) return next("invalid address");
   else{
     let skill = web3.utils.utf8ToHex(req.body.skill);
     Labank.addSkill(req.body.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
@@ -64,7 +64,7 @@ exports.addSkill = function(req,res,next){
 exports.removeSkill = function(req,res,next){
   if(!req.body.skill) return next("missing params");
   if(!req.body.address) return next("missing user address");
-  if(!web3.isAddress(req.body.address) return next("invalid address");
+  if(!web3.isAddress(req.body.address)) return next("invalid address");
   else{
     let skill = web3.utils.utf8ToHex(req.body.skill);
     Labank.removeSkill(req.body.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
@@ -77,7 +77,7 @@ exports.removeSkill = function(req,res,next){
 exports.transfer = function(req,res,next){
   if(!req.body.to) return next("missing params");
   if(!req.body.address) return next("missing user address");
-  if(!web3.isAddress(req.body.address) return next("invalid address");
+  if(!web3.isAddress(req.body.address)) return next("invalid address");
   else{
     Labank.transfer(req.body.to, req.body.amount).send({ from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return next(err);

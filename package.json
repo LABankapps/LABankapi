@@ -2,7 +2,7 @@
   "name": "LABankapi",
   "version": "1.0.0",
   "scripts": {
-    "deploy" : "node ./api/controllers/deploy-blockchain.js",
+    "deploy": "node ./api/controllers/deploy-blockchain.js",
     "start": "node ./config/www",
     "dev": "nodemon ./config/www"
   },
@@ -22,6 +22,7 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-favicon": "~2.4.5",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "web3": "^0.20.4"
   }
 }
