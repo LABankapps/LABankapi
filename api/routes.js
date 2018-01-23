@@ -3,6 +3,7 @@ const express = require('express'),
       UserController = require('./controllers/user.js'),
       EngineController = require('./controllers/engine.js'),
       RecordController = require('./controllers/record.js'),
+      blockChainController = require('./controllers/blockchain.js'),
       passportService = require('../config/passport'),
       passport = require('passport'),
       multer = require('multer'),
@@ -211,6 +212,67 @@ module.exports = function(app) {
       if (!user) { return res.status(401).send({ error: info.error }) }
 
       RecordController.getByUserId(req, res, next);
+    })(req, res, next);
+  });
+
+  //=========================
+  // Blockchain Routes
+  //=========================
+
+  apiRoutes.use('/blockchain', blockchainRoutes, function(req, res){ index('blockChain Provider', [], res)});
+
+  blockchainRoutes.get('/user/:index', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+      blockChainController.getUser(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.get('/skills/:address', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.getSkills(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.get('/balanceOf/:address', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      //if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.getBalanceOf(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.post('/skill/:address/:skill', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.addSkill(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.delete('/skill/:address/:skill', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.removeSkill(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.post('/transfer', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      //if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.transfer(req,res,next);
+    })(req, res, next);
+  });
+
+  blockchainRoutes.post('/reduce/:to/:amount', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      if (!user) { return res.status(401).send({ error: info.error }) }
+
+      blockChainController.reduce(req,res,next);
     })(req, res, next);
   });
 
