@@ -47,7 +47,7 @@ exports.approveRecord = function (req, res, next) {
       }
       if(user.blockChainId){
         var balance = blockChainController.getBalance(user.blockChainId);
-        console.log(balance);
+        
         if(balance >= record.price){
           //process to paiement
           blockChainController.pay(user.blockchain, record.price, (err, transactionHash) => {
