@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0xf5dbcfb03f006d1be0cb680421e63b4e64ae2160"; //returned after deploy
+const contractAddress = "0x600946e2c0e093936da3c96b32b4beacda926b69"; //returned after deploy
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
 const Contract = web3.eth.contract(compiledContract.abi);
@@ -66,7 +66,7 @@ exports.addSkill = function(req,res,next){
     let skill = web3.toHex(req.params.skill);
     Labank.addSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return next(err);
-      return res.status(200).json({ result : transactionHash });
+      return res.status(200).json({ skills : transactionHash });
     });
   }
 };
