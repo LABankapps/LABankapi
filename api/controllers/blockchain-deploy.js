@@ -9,5 +9,5 @@ const gasEstimate = web3.eth.estimateGas({data: compiledContract.bytecode});
 // deploy new contract
 Contract.new({ data : compiledContract.bytecode, from: coinbase, gas: gasEstimate+10000 }, function(err, myContract){
   console.log("hash " + myContract.transactionHash);
-  console.log("async " + myContract.address); // the contract address
+  console.log("address " + myContract.address); // the contract address
 });
