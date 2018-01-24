@@ -1,6 +1,7 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0x64d85691f5431ba1b74116a618ad66a28695e641"; //returned after deploy
+const contractAddress = "0xea569425210b350191a4e2032dcb1af2589eb25d"; //returned after deploy
+const nullAddress = "0x0000000000000000000000000000000000000000";
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
 const Contract = web3.eth.contract(compiledContract.abi);
@@ -10,7 +11,7 @@ const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
 exports.getSkills = function(req,res,next){
   if(!req.params.address) return res.status(422).json({ "error" : "Missing address"});
-  if(!web3.isAddress(req.params.address) || address === nullAddress ) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress ) return res.status(422).json({ "error" : "invalid address" });
   else{
     var result = Labank.getSkills(req.params.address);
     var array = [];
