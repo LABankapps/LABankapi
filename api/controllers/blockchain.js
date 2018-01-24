@@ -1,7 +1,6 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0xf5dbcfb03f006d1be0cb680421e63b4e64ae2160"; //returned after deploy
-const nullAddress = "0x0000000000000000000000000000000000000000";
+const contractAddress = "0x64d85691f5431ba1b74116a618ad66a28695e641"; //returned after deploy
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
 const Contract = web3.eth.contract(compiledContract.abi);
@@ -11,7 +10,7 @@ const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
 exports.getSkills = function(req,res,next){
   if(!req.params.address) return res.status(422).json({ "error" : "Missing address"});
-  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress)) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(req.params.address) || address === nullAddress ) return res.status(422).json({ "error" : "invalid address" });
   else{
     var result = Labank.getSkills(req.params.address);
     var array = [];
@@ -27,7 +26,7 @@ exports.getSkills = function(req,res,next){
 
 exports.getBalance = function getBalance(address){
   if(!address) return res.status(422).json({ "error" : "missing user address" });
-  if(!web3.isAddress(address) || address === nullAddress)) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(address) || address === nullAddress) return res.status(422).json({ "error" : "invalid address" });
   else{
     var result = Labank.balanceOf(address);
     var balance = result.toNumber();
@@ -37,7 +36,7 @@ exports.getBalance = function getBalance(address){
 
 exports.getBalanceOf = function(req,res,next){
   if(!req.params.address) return res.status(422).json({ "error" : "missing user address" });
-  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress)) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress) return res.status(422).json({ "error" : "invalid address" });
   else{
     var result = Labank.balanceOf(req.params.address);
     var balance = result.toNumber();
@@ -61,12 +60,12 @@ exports.insertUser = function(req,res,next){
 exports.addSkill = function(req,res,next){
   if(!req.params.skill) return res.status(422).json({ "error" : "missing skill" });
   if(!req.params.address) return res.status(422).json({ "error" : "missing address" });
-  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress)) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress) return res.status(422).json({ "error" : "invalid address" });
   else{
     let skill = web3.toHex(req.params.skill);
     Labank.addSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return next(err);
-      return res.status(200).json({ result : transactionHash });
+      return res.status(200).json({ skills : transactionHash });
     });
   }
 };
@@ -74,7 +73,7 @@ exports.addSkill = function(req,res,next){
 exports.removeSkill = function(req,res,next){
   if(!req.params.skill) return res.status(422).json({ "error" : "missing params" });
   if(!req.params.address) return res.status(422).json({ "error" : "missing user address" });
-  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress)) return res.status(422).json({ result : "invalid address" });
+  if(!web3.isAddress(req.params.address) || req.params.address === nullAddress) return res.status(422).json({ result : "invalid address" });
   else{
     let skill = web3.toHex(req.params.skill);
     Labank.removeSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
@@ -88,7 +87,7 @@ exports.removeSkill = function(req,res,next){
 exports.transfer = function(req,res,next){
   if(!req.params.amount) return res.status(422).json({ "error" : "missing amount" });
   if(!req.params.to) return res.status(422).json({ "error" : "missing user address" });
-  if(!web3.isAddress(req.params.to) || req.params.to === nullAddress)) return res.status(422).json({ "error" : "invalid address" });
+  if(!web3.isAddress(req.params.to) || req.params.to === nullAddress) return res.status(422).json({ "error" : "invalid address" });
   else{
     Labank.transfer(req.params.to, req.params.amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return next(err);
@@ -100,7 +99,7 @@ exports.transfer = function(req,res,next){
 exports.pay = function pay(from, amount, callback){
   if(!amount) return callback("missing amount");
   if(!to) return callback("missing user address");
-  if(!web3.isAddress(from) || from === nullAddress)) return callback("invalid address");
+  if(!web3.isAddress(from) || from === nullAddress) return callback("invalid address");
   else{
     Labank.reduce(from, amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       if(err) return callback(err);

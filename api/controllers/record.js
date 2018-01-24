@@ -34,7 +34,7 @@ exports.getByUserId = function (req, res, next) {
   });
 };
 
-exports.approveTransacation = function (req, res, next) {
+exports.approveRecord = function (req, res, next) {
   Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record, recordUpdate) => {
     if (err) {
       res.status(400).json({ error: "Can't find record"});
