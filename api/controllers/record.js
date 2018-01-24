@@ -35,28 +35,38 @@ exports.getByUserId = function (req, res, next) {
 };
 
 exports.approveRecord = function (req, res, next) {
-  Record.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, record, recordUpdate) => {
+  Record.findById(req.params.id, (err, record) => {
+    if(record.status === 'Waiting'){
+      return res.status(400).json({ error: "Réservation déjà éfféctuée."});
+    }
     if (err) {
-      res.status(400).json({ error: "Can't find record"});
-      return next(err);
+      return res.status(400).json({ error: "Aucune réservation."});
     }
     setRecordInfo.FindUser(record.from, (err, user) => {
-      if(err){
-        res.status(400).json({ error: "Can't find user" });
-        return next(err);
+      if(err || !user){
+        return res.status(400).json({ error: "Aucun utilisateur de trouvé." });
       }
-      if(user.blockChainId){
-        var balance = blockChainController.getBalance(user.blockChainId);
-        
+
+      if(user.profile.blockChainId){
+        var balance = blockChainController.getBalance(user.profile.blockChainId);
         if(balance >= record.price){
           //process to paiement
-          blockChainController.pay(user.blockchain, record.price, (err, transactionHash) => {
+          blockChainController.pay(user.profile.blockChainId, record.price, (err, transactionHash) => {
             if(err){
-              res.status(400).json({ error: "Can't find user" });
+              console.log(err);
+              return res.status(400).json({ error: "Aucun utilisateur de trouvé." });
               return next(err);
             }
-            return res.status(200).json({ result : transactionHash });
+
+            record.status = "Accept";
+
+            record.save(function(err, record) {
+              if (err) { return next(err); }
+              return res.status(200).json({ record : record });
+            });
           });
+        }else{
+          return res.status(400).json({ error: "Argent insuffisant." });
         }
       }
     });

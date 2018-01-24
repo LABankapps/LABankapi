@@ -99,7 +99,7 @@ exports.transfer = function(req,res,next){
 
 exports.pay = function pay(from, amount, callback){
   if(!amount) return callback("missing amount");
-  if(!to) return callback("missing user address");
+  if(!from) return callback("missing user address");
   if(!web3.isAddress(from) || from === nullAddress) return callback("invalid address");
   else{
     Labank.reduce(from, amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
