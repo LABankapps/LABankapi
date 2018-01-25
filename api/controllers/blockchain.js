@@ -107,4 +107,4 @@ exports.pay = function pay(from, amount, callback){
       else return callback(null, transactionHash);
     });
   }
-}
+};
