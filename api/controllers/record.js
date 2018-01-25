@@ -45,6 +45,8 @@ exports.approveRecord = function (req, res, next) {
         res.status(400).json({ error: "Can't find user" });
         return next(err);
       }
+      if(!user) //
+
       if(user.blockChainId){
         var balance = blockChainController.getBalance(user.blockChainId);
         console.log(balance);
