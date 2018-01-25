@@ -205,7 +205,7 @@ exports.reservation = function (req, res, next) {
               "date": date,
               "duration": duration,
             });
-            record.create(from, req.params.id, date, duration, existingEngine.price);
+            record.create(from, req.params.id, date, duration, existingEngine.price * new Date(duration).getHours());
           }
 
           if(before >= existingEngine.reserved.length){
