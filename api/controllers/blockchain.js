@@ -86,7 +86,7 @@ exports.removeSkill = function(req,res,next){
 };
 
 exports.transfer = function(req,res,next){
-  if(!req.params.amount) return res.status(422).json({ "error" : "missing amount" });
+  if(!req.params.amount) return res.status(422).json({ "error" : "Montant manquant." });
   if(!req.params.to) return res.status(422).json({ "error" : "Adresse manquante." });
   if(!web3.isAddress(req.params.to) || req.params.to === nullAddress) return res.status(422).json({ "error" : "Adresse invalide." });
   else{
@@ -107,4 +107,4 @@ exports.pay = function pay(from, amount, callback){
       else return callback(null, transactionHash);
     });
   }
-}
+};

@@ -46,7 +46,6 @@ exports.approveRecord = function (req, res, next) {
       if(err || !user){
         return res.status(400).json({ error: "Aucun utilisateur de trouvé." });
       }
-
       if(user.profile.blockChainId){
         var balance = blockChainController.getBalance(user.profile.blockChainId);
         if(balance >= record.price){
