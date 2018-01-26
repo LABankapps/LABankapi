@@ -9,4 +9,5 @@ const Labank = Contract.at(contractAddress); // instantiate by address
 const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
 console.log(coinbase);
-console.log(web3.fomWei(web3.eth.getBalance(web3.eth.coinbase), "ether"));
+console.log(web3.fromWei(web3.eth.getBalance(coinbase), "ether"));
+console.log(Labank.greet());
