@@ -29,7 +29,7 @@ var options = {
 
 var server = http.createServer(app);
 
-if(process.env.INIT_CWD === '/var/app/LABankapi') { //https over http
+if(process.env.NODE_ENV !== 'development') { //https over http
   server = https.createServer(options, app);
 }
 var io = require('socket.io')(server);
