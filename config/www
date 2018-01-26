@@ -6,6 +6,8 @@
 
 var app = require('../server');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
 
 
 /**
@@ -15,11 +17,21 @@ var http = require('http');
 var port = normalizePort(require("../config/main").port);
 app.set('port', port);
 
+//This line is from the Node.js HTTPS documentation.
+var options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/labank.cc/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/labank.cc/cert.pem')
+};
+
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+
+if(process.env.INIT_CWD === '/var/app/LABankapi') { //https over http
+  server = https.createServer(options, app);
+}
 var io = require('socket.io')(server);
 
 /**
@@ -113,7 +125,7 @@ function onError(error) {
 }
 
 /**
- * Event listener for HTTP server "listening" event.
+ * Event listener for HTTP and HTTPS server "listening" event.
  */
 
 function onListening() {

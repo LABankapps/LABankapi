@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "deploy": "node ./api/controllers/blockchain-deploy.js",
-    "setGreeter" : "node ./contracts/setGreeter.js",
-    "getGreeter" : "node ./contracts/getGreeter.js",
+    "setGreeter": "node ./contracts/setGreeter.js",
+    "getGreeter": "node ./contracts/getGreeter.js",
     "start": "node ./config/www",
     "dev": "nodemon ./config/www"
   },
@@ -13,6 +13,7 @@
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "express": "^4.16.2",
+    "https": "^1.0.0",
     "jsonwebtoken": "^8.1.0",
     "mailgun-js": "^0.14.1",
     "mongoose": "^4.13.2",
