@@ -11,5 +11,5 @@ const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 var str = web3.toHex("test");
 Labank.setGreeter(str, { from: coinbase, gas: 1000000 }, function(err, transactionHash){
   if(err) console.log(err);
-  else console.log(transactionHash);
+  else console.log("transaction : " + transactionHash);
 });
