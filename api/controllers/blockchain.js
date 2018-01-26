@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const compiledContract = require('../../contracts/LABankdapp');
-const contractAddress = "0xea569425210b350191a4e2032dcb1af2589eb25d"; //returned after deploy
+const contractAddress = "0xf56892a2c1af28bb38ed75a5ffd22a22781ee7c9"; //returned after deploy
 const nullAddress = "0x0000000000000000000000000000000000000000";
 const localhost = "http://localhost:8545";
 const web3 = new Web3(new Web3.providers.HttpProvider(localhost));
