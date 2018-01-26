@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "deploy": "node ./api/controllers/blockchain-deploy.js",
+    "setGreeter" : "node ./contracts/setGreeter.js",
+    "getGreeter" : "node ./contracts/getGreeter.js",
     "start": "node ./config/www",
     "dev": "nodemon ./config/www"
   },
