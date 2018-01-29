@@ -17,12 +17,6 @@ var fs = require('fs');
 var port = normalizePort(require("../config/main").port);
 app.set('port', port);
 
-//This line is from the Node.js HTTPS documentation.
-var options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/labank.cc/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/labank.cc/cert.pem')
-};
-
 /**
  * Create HTTP server.
  */
@@ -30,6 +24,13 @@ var options = {
 var server = http.createServer(app);
 
 if(process.env.NODE_ENV !== 'development') { //https over http
+
+  //This line is from the Node.js HTTPS documentation.
+  var options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/labank.cc/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/labank.cc/cert.pem')
+  };
+
   server = https.createServer(options, app);
 }
 var io = require('socket.io')(server);

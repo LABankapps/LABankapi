@@ -6,12 +6,13 @@
     "setGreeter": "node ./contracts/setGreeter.js",
     "getGreeter": "node ./contracts/getGreeter.js",
     "start": "node ./config/www",
-    "dev": "nodemon ./config/www"
+    "dev": "cross-env NODE_ENV=development nodemon ./config/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
+    "cross-env": "^5.1.3",
     "express": "^4.16.2",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.1.0",

@@ -1,8 +1,8 @@
 module.exports = {
   // Configuring Mailgun API for sending transactional email
-  mailgun_priv_key: 'key-b2b641004485d41b0a63815365c9da7d',
+  mailgun_priv_key: 'key-d5d9822842ea0f638cda948695e5b204',
   // Configuring Mailgun domain for sending transactional email
-  mailgun_domain: 'sandbox7416171c2f404415a2a93fd87c0e5308.mailgun.org',
+  mailgun_domain: 'www.labank.cc',
   // Secret key for JWT signing and encryption
   'secret': '123456',
   // Database connection information
