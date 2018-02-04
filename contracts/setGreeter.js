@@ -8,7 +8,7 @@ const Contract = web3.eth.contract(compiledContract.abi);
 const Labank = Contract.at(contractAddress); // instantiate by address
 const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
-var str = web3.toHex("test");
+var str = web3.toHex("aaaaaaaaaaaaaaaaaaaaa");
 Labank.setGreeter(str, { from: coinbase, gas: 1000000 }, function(err, transactionHash){
   if(err) console.log(err);
   else console.log("transaction : " + transactionHash);
