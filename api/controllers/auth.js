@@ -52,7 +52,7 @@ exports.login = function(req, res, next) {
 // Registration Route
 //========================================
 exports.register = function(req, res, next) {
-  console.log("register");
+  console.log(req.body);
   // Check for registration errors
   const email = req.body.email;
   const firstName = req.body.firstName;
