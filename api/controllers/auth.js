@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken'),
       config = require('../../config/main'),
       User = require('../models/user'),
-      setUserInfo = require('../_helpers/setUserInfo').setUserInfo;
+      setUserInfo = require('../_helpers/setUserInfo').setUserInfo,
+      blockChainController = require('./blockchain.js');
 
 function generateToken(user) {
   return jwt.sign(user, config.secret, {
@@ -56,9 +57,13 @@ exports.register = function(req, res, next) {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const password = req.body.password;
-  const blockChainId = req.body.blockChainId;
+  var blockChainId = req.body.blockChainId;
   const role = req.body.role || "Member";
 
+  var address = blockChainController.getLastUser();
+  console.log("addresse " : address);
+
+  req.body.blockChainId = address;
   // Return error if no email provided
   if (!email) {
     return res.status(422).send({ error: 'Veuillez rentrer une adresse email.'});//You must enter an email address.
@@ -96,7 +101,7 @@ exports.register = function(req, res, next) {
       let user = new User({
         email: email,
         password: password,
-        profile: { firstName: firstName, lastName: lastName, blockChainId: blockChainId },
+        profile: { firstName: firstName, lastName: lastName, blockChainId: address },
         role : role
       });
 

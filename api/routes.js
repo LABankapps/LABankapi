@@ -247,9 +247,7 @@ module.exports = function(app) {
   //SETTERS
 
   blockchainRoutes.post('/user', function(req,res,next){
-    console.log("sfsefsefsef");
-    // blockChainController.insertUser(req,res,next);
-    blockChainController.getLastUser(req,res,next);
+    blockChainController.insertUser(req,res,next);
   });
 
   blockchainRoutes.post('/skill/:address/:skill', function(req,res,next){
