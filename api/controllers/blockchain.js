@@ -55,12 +55,12 @@ exports.getBalanceOf = function(req,res,next){
  };
 
 exports.insertUser = function(req,res,next){
-  var length = Labank.getLastUser();
+  var length = Labank.getLastUser().toNumber();
   console.log(length);
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     if(err) return next(err);
     else{
-      var length2 = Labank.getLastUser();
+      var length2 = Labank.getLastUser().toNumber();
       var address = Labank.getUser(length2-1);
       return res.status(200).json({ address : address });
     }
