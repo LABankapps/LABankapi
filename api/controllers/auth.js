@@ -61,7 +61,7 @@ exports.register = function(req, res, next) {
   const role = req.body.role || "Member";
 
   var address = blockChainController.getLastUser();
-  console.log("addresse " : address);
+  console.log("addresse : " + address);
 
   req.body.blockChainId = address;
   // Return error if no email provided
