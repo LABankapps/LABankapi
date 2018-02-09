@@ -47,17 +47,23 @@ exports.getBalanceOf = function(req,res,next){
 
  /* SETTERS */
 
-exports.getLastUser = function(){
- var length = Labank.getLastUser().toNumber();
- var address = getUser(length-1);
- console.log(address);
- return address;
-};
+ exports.getLastUser = function(){
+  var length = Labank.getLastUser().toNumber();
+  var address = getUser(length-1);
+  console.log(address);
+  return address;
+ };
 
 exports.insertUser = function(req,res,next){
+  var length = Labank.getLastUser();
+  console.log(length);
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     if(err) return next(err);
-    else return res.status(200).json({ address : "0x" });
+    else{
+      var length2 = Labank.getLastUser();
+      var address = Labank.getUser(length2-1);
+      return res.status(200).json({ address : address });
+    }
   });
 };
 
