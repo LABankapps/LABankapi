@@ -49,6 +49,8 @@ exports.getBalanceOf = function(req,res,next){
 
 exports.insertUser = function(req,res,next){
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
+    console.log(transactionHash);
+    console.log(err);
     if(err) return next(err);
     else{
       var length = Labank.getLastUser();
