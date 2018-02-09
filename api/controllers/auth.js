@@ -51,8 +51,8 @@ exports.login = function(req, res, next) {
 // Registration Route
 //========================================
 exports.register = function(req, res, next) {
-    console.log("register");
   // Check for registration errors
+  console.log(req.body);
   const email = req.body.email;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
