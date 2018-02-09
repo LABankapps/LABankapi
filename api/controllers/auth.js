@@ -52,7 +52,6 @@ exports.login = function(req, res, next) {
 //========================================
 exports.register = function(req, res, next) {
   // Check for registration errors
-  console.log(req.body);
   const email = req.body.email;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -107,7 +106,6 @@ exports.register = function(req, res, next) {
         // Respond with JWT if user was created
 
         let userInfo = setUserInfo(user);
-        console.log(userInfo);
         res.status(201).json({
           user: userInfo
         });

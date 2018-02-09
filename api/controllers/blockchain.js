@@ -54,6 +54,7 @@ exports.insertUser = function(req,res,next){
     if(err) return next(err);
     else{
       var length = Labank.getLastUser();
+      console.log(length);
       var address = Labank.getUser(length-1);
       console.log(address);
       return res.status(200).json({ address : address });
