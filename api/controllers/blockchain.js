@@ -47,11 +47,10 @@ exports.getBalanceOf = function(req,res,next){
 
  /* SETTERS */
 
- exports.getLastUser = function(req,res,next){
-   var length = Labank.getLastUser();
-    console.log(length.toNumber());
-    return res.status(200).json({ address : "sfserf" });
-   });
+exports.getLastUser = function(req,res,next){
+  var length = Labank.getLastUser();
+  console.log(length.toNumber());
+  return res.status(200).json({ address : "sfserf" });
  };
 
 exports.insertUser = function(req,res,next){
