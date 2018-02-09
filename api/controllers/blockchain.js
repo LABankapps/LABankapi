@@ -50,6 +50,7 @@ exports.getBalanceOf = function(req,res,next){
 exports.getLastUser = function(){
  var length = Labank.getLastUser().toNumber();
  var address = getUser(length-1);
+ console.log(address);
  return address;
 };
 

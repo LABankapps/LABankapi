@@ -60,10 +60,10 @@ exports.register = function(req, res, next) {
   var blockChainId = req.body.blockChainId;
   const role = req.body.role || "Member";
 
-  var address = blockChainController.getLastUser();
+  blockChainId = blockChainController.getLastUser();
   console.log("addresse : " + address);
 
-  req.body.blockChainId = address;
+  blockChainId = address;
   // Return error if no email provided
   if (!email) {
     return res.status(422).send({ error: 'Veuillez rentrer une adresse email.'});//You must enter an email address.
@@ -101,7 +101,7 @@ exports.register = function(req, res, next) {
       let user = new User({
         email: email,
         password: password,
-        profile: { firstName: firstName, lastName: lastName, blockChainId: address },
+        profile: { firstName: firstName, lastName: lastName, blockChainId: blockChainId },
         role : role
       });
 
