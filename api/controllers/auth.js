@@ -52,7 +52,6 @@ exports.login = function(req, res, next) {
 // Registration Route
 //========================================
 exports.register = function(req, res, next) {
-  console.log(req.body);
   // Check for registration errors
   const email = req.body.email;
   const firstName = req.body.firstName;
@@ -61,7 +60,8 @@ exports.register = function(req, res, next) {
   const blockChainId = req.body.blockChainId;
   const role = req.body.role || "Member";
 
-  blockChainController.getLastUser();
+console.log("call get address");
+  var address = blockChainController.getLastUser();
   // Return error if no email provided
   if (!email) {
     return res.status(422).send({ error: 'Veuillez rentrer une adresse email.'});//You must enter an email address.
@@ -99,7 +99,7 @@ exports.register = function(req, res, next) {
       let user = new User({
         email: email,
         password: password,
-        profile: { firstName: firstName, lastName: lastName, blockChainId: blockChainId },
+        profile: { firstName: firstName, lastName: lastName, blockChainId: address },
         role : role
       });
 
