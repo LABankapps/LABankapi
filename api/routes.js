@@ -247,7 +247,6 @@ module.exports = function(app) {
   //SETTERS
 
   blockchainRoutes.post('/user', function(req,res,next){
-    console.log("blockChain");
     blockChainController.insertUser(req,res,next);
   });
 

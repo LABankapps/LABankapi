@@ -45,21 +45,46 @@ exports.getBalanceOf = function(req,res,next){
   }
 };
 
- /* SETTERS */
-
- exports.getLastUser = function(){
-   console.log(eth.getBlock("pending").transactions.length);
+exports.getLastUser = function(){
+  console.log(eth.getBlock("pending").transactions.length);
   var value = Labank.getLastUser();
   var address = Labank.getUser(value.toNumber()-1);
   console.log(address);
   return address;
- };
+};
+
+ /* SETTERS */
+
+function waitToBeMined(txnHash){
+  var transactionReceiptAsync;
+  interval = interval ? interval : 500;
+  transactionReceiptAsync = function(txnHash, resolve, reject) {
+    try {
+        var receipt = web3.eth.getTransactionReceipt(txnHash);
+        if (receipt == null) {
+            setTimeout(function () {
+                transactionReceiptAsync(txnHash, resolve, reject);
+            }, interval);
+        } else {
+          console.log("mined");
+          resolve(receipt);
+        }
+    } catch(e) {
+        reject(e);
+    }
+  };
+  return new Promise(function (resolve, reject) {
+      transactionReceiptAsync(txnHash, resolve, reject);
+  });
+}
 
 exports.insertUser = function(req,res,next){
   var length = Labank.getLastUser();
   console.log(length.toNumber());
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     console.log(transactionHash);
+    waitToBeMined(transactionHash);
+    console.log("mined after");
     if(err) return next(err);
     else return res.status(200).json({ address : "" });
   });
