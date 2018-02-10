@@ -55,7 +55,7 @@ exports.getLastUser = function(){
 
  /* SETTERS */
 
-function waitToBeMined(txnHash){
+function waitToBeMined(txnHash, interval){
   var transactionReceiptAsync;
   interval = interval ? interval : 500;
   transactionReceiptAsync = function(txnHash, resolve, reject) {
