@@ -46,10 +46,8 @@ exports.getBalanceOf = function(req,res,next){
 };
 
 exports.getLastUser = function(){
-  console.log(eth.getBlock("pending").transactions.length);
   var value = Labank.getLastUser();
   var address = Labank.getUser(value.toNumber()-1);
-  console.log(address);
   return address;
 };
 
@@ -59,7 +57,7 @@ function waitToBeMined(txnHash, interval){
   var transactionReceiptAsync;
   interval = interval ? interval : 500;
   transactionReceiptAsync = function(txnHash, resolve, reject) {
-    console.log("transactionReceiptAsync");
+    console.log("pending transaction...");
     try {
         var receipt = web3.eth.getTransactionReceipt(txnHash);
         if (receipt == null) {
@@ -80,16 +78,14 @@ function waitToBeMined(txnHash, interval){
 }
 
 exports.insertUser = function(req,res,next){
-  var length = Labank.getLastUser();
-  var name = Labank.name();
-  console.log(name);
-  console.log(length.toNumber());
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     console.log(transactionHash);
     waitToBeMined(transactionHash);
-    console.log("mined after");
+    var length = Labank.getLastUser();
+    console.log(length.toNumber());
+    var address = Labank.getUser(length.toNumber());
     if(err) return next(err);
-    else return res.status(200).json({ address : "" });
+    else return res.status(200).json({ address : address });
   });
 };
 
