@@ -53,39 +53,35 @@ exports.getLastUser = function(){
 
  /* SETTERS */
 
-function waitToBeMined(txnHash, interval){
+function waitToBeMined(txnHash, callback){
   var transactionReceiptAsync;
-  interval = interval ? interval : 500;
-  transactionReceiptAsync = function(txnHash, resolve, reject) {
+  var interval = 500;
+  transactionReceiptAsync = function(txnHash) {
     console.log("pending transaction...");
-    try {
-        var receipt = web3.eth.getTransactionReceipt(txnHash);
-        if (receipt == null) {
-            setTimeout(function () {
-                transactionReceiptAsync(txnHash, resolve, reject);
-            }, interval);
-        } else {
-          console.log("mined");
-          resolve(receipt);
-        }
-    } catch(e) {
-        reject(e);
+    var receipt = web3.eth.getTransactionReceipt(txnHash);
+    if (receipt == null) {
+        setTimeout(function () {
+          transactionReceiptAsync(txnHash);
+        }, interval);
+    } else {
+      console.log("mined");
+      return callback();
     }
   };
-  return new Promise(function (resolve, reject) {
-      transactionReceiptAsync(txnHash, resolve, reject);
-  });
+  transactionReceiptAsync(txnHash);
 }
 
 exports.insertUser = function(req,res,next){
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
-    console.log(transactionHash);
-    waitToBeMined(transactionHash);
-    var length = Labank.getLastUser();
-    console.log(length.toNumber());
-    var address = Labank.getUser(length.toNumber());
-    if(err) return next(err);
-    else return res.status(200).json({ address : address });
+    waitToBeMined(transactionHash, function(){
+      console.log("synchronous");
+      var length = Labank.getLastUser();
+      console.log(length.toNumber());
+      var address = Labank.getUser(length.toNumber());
+      if(err) return next(err);
+      else return res.status(200).json({ address : address });
+    });
+    console.log("asynchronous");
   });
 };
 
