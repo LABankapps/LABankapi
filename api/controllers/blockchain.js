@@ -59,6 +59,7 @@ function waitToBeMined(txnHash, interval){
   var transactionReceiptAsync;
   interval = interval ? interval : 500;
   transactionReceiptAsync = function(txnHash, resolve, reject) {
+    console.log("transactionReceiptAsync");
     try {
         var receipt = web3.eth.getTransactionReceipt(txnHash);
         if (receipt == null) {
@@ -80,6 +81,8 @@ function waitToBeMined(txnHash, interval){
 
 exports.insertUser = function(req,res,next){
   var length = Labank.getLastUser();
+  var name = Labank.name();
+  console.log(name);
   console.log(length.toNumber());
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     console.log(transactionHash);
