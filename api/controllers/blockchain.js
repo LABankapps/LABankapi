@@ -76,7 +76,7 @@ exports.insertUser = function(req,res,next){
     waitToBeMined(transactionHash, function(){
       var length = Labank.getLastUser();
       console.log(length.toNumber());
-      var address = Labank.getUser(length.toNumber());
+      var address = Labank.getUser(length.toNumber()-1);
       console.log(address);
       if(err) return next(err);
       else return res.status(200).json({ address : address });
