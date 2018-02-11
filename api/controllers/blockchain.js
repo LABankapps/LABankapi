@@ -74,14 +74,13 @@ function waitToBeMined(txnHash, callback){
 exports.insertUser = function(req,res,next){
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     waitToBeMined(transactionHash, function(){
-      console.log("synchronous");
       var length = Labank.getLastUser();
       console.log(length.toNumber());
       var address = Labank.getUser(length.toNumber());
+      console.log(address);
       if(err) return next(err);
       else return res.status(200).json({ address : address });
     });
-    console.log("asynchronous");
   });
 };
 
