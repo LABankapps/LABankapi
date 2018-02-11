@@ -75,9 +75,7 @@ exports.insertUser = function(req,res,next){
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
     waitToBeMined(transactionHash, function(){
       var length = Labank.getLastUser();
-      console.log(length.toNumber());
       var address = Labank.getUser(length.toNumber()-1);
-      console.log(address);
       if(err) return next(err);
       else return res.status(200).json({ address : address });
     });
@@ -91,8 +89,10 @@ exports.addSkill = function(req,res,next){
   else{
     let skill = web3.toHex(req.params.skill);
     Labank.addSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
-      if(err) return next(err);
-      return res.status(200).json({ skills : transactionHash });
+      waitToBeMined(transactionHash, function(){
+        if(err) return next(err);
+        return res.status(200).json({ skills : transactionHash });
+      });
     });
   }
 };
@@ -104,9 +104,10 @@ exports.removeSkill = function(req,res,next){
   else{
     let skill = web3.toHex(req.params.skill);
     Labank.removeSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
-      console.log(err);
-      if(err) return next(err);
-      return res.status(200).json({result : transactionHash});
+      waitToBeMined(transactionHash, function(){
+        if(err) return next(err);
+        return res.status(200).json({result : transactionHash});
+      });
     });
   }
 };
@@ -117,8 +118,10 @@ exports.transfer = function(req,res,next){
   if(!web3.isAddress(req.params.to) || req.params.to === nullAddress) return res.status(422).json({ "error" : "Adresse invalide." });
   else{
     Labank.transfer(req.params.to, req.params.amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
-      if(err) return next(err);
-      else return res.status(200).json({ result : transactionHash });
+      waitToBeMined(transactionHash, function(){
+        if(err) return next(err);
+        else return res.status(200).json({ result : transactionHash });
+      });
     });
   }
 };
@@ -129,8 +132,10 @@ exports.pay = function pay(from, amount, callback){
   if(!web3.isAddress(from) || from === nullAddress) return callback("Adresse invalide.");
   else{
     Labank.reduce(from, amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
-      if(err) return callback(err);
-      else return callback(null, transactionHash);
+      waitToBeMined(transactionHash, function(){
+        if(err) return callback(err);
+        else return callback(null, transactionHash);
+      });
     });
   }
 };
