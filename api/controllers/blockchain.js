@@ -9,6 +9,9 @@ const initialAmount = 100;
 const Labank = Contract.at(contractAddress); // instantiate by address
 const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
+var mining = web3.eth.mining;
+console.log(mining); // true or false
+
 exports.getSkills = function(req,res,next){
   if(!req.params.address) return res.status(422).json({ "error" : "Adresse manquante."});
   if(!web3.isAddress(req.params.address) || req.params.address === nullAddress ) return res.status(422).json({ "error" : "Adresse invalide." });
