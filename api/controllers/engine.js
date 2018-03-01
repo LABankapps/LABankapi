@@ -169,7 +169,9 @@ exports.reservation = function (req, res, next) {
     const duration = req.body.duration;
 
     Engine.findOne({ _id: req.params.id }, function(err, existingEngine) {
-        if (err) { return next(err); }
+        if (err) {
+          console.log(err);
+          return next(err); }
 
         if(typeof existingEngine.reserved[0] === 'undefined'){
           existingEngine.reserved.push({
@@ -182,7 +184,6 @@ exports.reservation = function (req, res, next) {
           const before = existingEngine.reserved.length;
 
           let open = true;
-
           existingEngine.reserved.map(value => {
             const doc = value._doc;
             const dateDuration = new Date(new Date(doc.date).getTime() + (new Date(doc.duration).getHours() * 60 + new Date(doc.duration).getMinutes()) * 60000 ).toLocaleString();
@@ -198,7 +199,6 @@ exports.reservation = function (req, res, next) {
               }
             }
           });
-
           if(open){
             existingEngine.reserved.push({
               "from": from,
@@ -207,14 +207,15 @@ exports.reservation = function (req, res, next) {
             });
             record.create(from, req.params.id, date, duration, existingEngine.price * new Date(duration).getHours());
           }
-
           if(before >= existingEngine.reserved.length){
             return res.status(400).json({ error: 'Date déjà prise.' });
           }
         }
 
         existingEngine.save(function(err, engine) {
-          if (err) { return res.status(400).json({ error: err }); }
+          if (err) {
+            console.log(err);
+            return res.status(400).json({ error: err }); }
 
           //update
           res.status(201).json({

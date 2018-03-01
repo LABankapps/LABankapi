@@ -40,8 +40,10 @@ const EngineSchema = new mongoose.Schema({
    ],
   },
   {
-  timestamps: true
-});
+    timestamps: true,
+    usePushEach: true
+  }
+);
 
 // Export Mongoose model
 module.exports = mongoose.model('engine', EngineSchema);

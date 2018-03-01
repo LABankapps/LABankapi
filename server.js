@@ -1,5 +1,6 @@
 const  express = require('express'),
        path = require('path'),
+       morgan = require('morgan'),
        favicon = require('serve-favicon'),
        logger = require('morgan'),
        cookieParser = require('cookie-parser'),
@@ -10,6 +11,8 @@ const  express = require('express'),
 
 //start MongoDB
 mongodbConnect();
+
+app.use(morgan('dev'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

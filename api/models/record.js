@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
 
 // Define record schema
-const RecordSchema = new mongoose.Schema({
-  from: String,
-  engine: String,
-  date: Date,
-  duration: Date,
-  price: Number,
-  status: {
-    type: String,
-    enum: ['Waiting', 'Accept', 'Cancel'],
-    default: 'Waiting'
-  },
+const RecordSchema = new mongoose.Schema(
+  {
+    from: String,
+    engine: String,
+    date: Date,
+    duration: Date,
+    price: Number,
+    status: { type: String, default: 'Waiting' }
   },
   {
-  timestamps: false
-});
+    timestamps: false
+  }
+);
 
 // Export Mongoose model
 module.exports = mongoose.model('record', RecordSchema);

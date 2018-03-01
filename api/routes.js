@@ -244,6 +244,13 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
+  blockchainRoutes.get('/balanceTest/:address', function(req,res,next){
+    passport.authenticate('jwt', function(err, user, info){
+      //if (!user) { return res.status(401).send({ error: info.error }) }
+      blockChainController.getBalanceOf(req,res,next);
+    })(req, res, next);
+  });
+  
   //SETTERS
 
   blockchainRoutes.post('/user', function(req,res,next){

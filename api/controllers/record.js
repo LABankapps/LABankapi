@@ -36,36 +36,56 @@ exports.getByUserId = function (req, res, next) {
 
 exports.approveRecord = function (req, res, next) {
   Record.findById(req.params.id, (err, record) => {
-    if(record.status === 'Waiting'){
+    if (err ||!record) {
+      console.log(err);
+      return res.status(400).json({ error: "Réservation supprimée ou inexistante."});
+    }
+    else if(record.status === 'Accepted'){
       return res.status(400).json({ error: "Réservation déjà éfféctuée."});
     }
-    if (err) {
-      return res.status(400).json({ error: "Aucune réservation."});
+    else if(record.status === 'Canceled'){
+      return res.status(400).json({ error: "Réservation annulée."});
     }
     setRecordInfo.FindUser(record.from, (err, user) => {
       if(err || !user){
-        return res.status(400).json({ error: "Aucun utilisateur de trouvé." });
+        return res.status(400).json({ error: "Aucun utilisateur trouvé." });
       }
-      if(user.profile.blockChainId){
-        var balance = blockChainController.getBalance(user.profile.blockChainId);
-        if(balance >= record.price){
-          //process to paiement
-          blockChainController.pay(user.profile.blockChainId, record.price, (err, transactionHash) => {
-            if(err){
-              console.log(err);
-              return res.status(400).json({ error: "Aucun utilisateur de trouvé." });
-              return next(err);
-            }
+      else{
+        if(user.profile && user.profile.blockChainId){
+          var balance = blockChainController.getBalance(user.profile.blockChainId);
+          console.log(balance);
+          if(balance >= record.price){
+            //process to paiement
+            var balance = blockChainController.getBalance(user.profile.blockChainId);
+            blockChainController.pay(user.profile.blockChainId, record.price, (err, msg) => {
+              console.log(msg);
+              if(err){
+                console.log(err);
+                return res.status(400).json({ error: msg });
+              }
+              else{
 
-            record.status = "Accept";
+                setTimeout(function(){
+                  var balance = blockChainController.getBalance(user.profile.blockChainId);
+                  console.log("balance after paiement " + balance);
 
-            record.save(function(err, record) {
-              if (err) { return next(err); }
-              return res.status(200).json({ record : record });
+                  record.status = "Accepted";
+                  record.save(function(err, record) {
+                    if (err || !record) {
+                      console.log(err);
+                      return next(err);
+                    }
+                    return res.status(200).json({ record : record });
+                  });
+                }, 3000);
+              }
             });
-          });
-        }else{
-          return res.status(400).json({ error: "Argent insuffisant." });
+          }else{
+            return res.status(400).json({ error: "ECROUS insuffisant." });
+          }
+        }
+        else{
+          return res.status(400).json({ error: "Blockchain addresse de l'utilsateur introuvable." });
         }
       }
     });

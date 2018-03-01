@@ -9,9 +9,6 @@ const initialAmount = 100;
 const Labank = Contract.at(contractAddress); // instantiate by address
 const coinbase = web3.eth.coinbase; //get eth.defaultAccount (synchronously)
 
-var mining = web3.eth.mining;
-console.log(mining); // true or false
-
 exports.getSkills = function(req,res,next){
   if(!req.params.address) return res.status(422).json({ "error" : "Adresse manquante."});
   if(!web3.isAddress(req.params.address) || req.params.address === nullAddress ) return res.status(422).json({ "error" : "Adresse invalide." });
@@ -58,17 +55,21 @@ exports.getLastUser = function(){
 
 function waitToBeMined(txnHash, callback){
   var transactionReceiptAsync;
-  var interval = 500;
+  const interval = 500;
+  var timeout = 10000;
   transactionReceiptAsync = function(txnHash) {
     console.log("pending transaction...");
     var receipt = web3.eth.getTransactionReceipt(txnHash);
     if (receipt == null) {
+      if(timeout <= 0 ) return callback(false, "Mining timeout exceeded (10s) Miners may be not mining");
+      else{
         setTimeout(function () {
+          timeout -= interval;
           transactionReceiptAsync(txnHash);
         }, interval);
+      }
     } else {
-      console.log("mined");
-      return callback();
+      return callback(true, "Transaction "+txnHash+" mined");
     }
   };
   transactionReceiptAsync(txnHash);
@@ -76,11 +77,11 @@ function waitToBeMined(txnHash, callback){
 
 exports.insertUser = function(req,res,next){
   Labank.insertUser(initialAmount, { from :coinbase, gas: 1000000 }, function(err, transactionHash){
-    waitToBeMined(transactionHash, function(){
+    waitToBeMined(transactionHash, function(mined, msg){
       var length = Labank.getLastUser();
       var address = Labank.getUser(length.toNumber()-1);
       if(err) return next(err);
-      else return res.status(200).json({ address : address });
+      else return res.status(200).json({ address : address, mined : mined, msg : msg });
     });
   });
 };
@@ -94,7 +95,7 @@ exports.addSkill = function(req,res,next){
     Labank.addSkill(req.params.address, skill, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
       waitToBeMined(transactionHash, function(){
         if(err) return next(err);
-        return res.status(200).json({ skills : transactionHash });
+        return res.status(200).json({ skills : transactionHash,  mined : mined, msg : msg });
       });
     });
   }
@@ -116,7 +117,7 @@ exports.removeSkill = function(req,res,next){
 };
 
 exports.transfer = function(req,res,next){
-  if(!req.params.amount) return res.status(422).json({ "error" : "Montant manquant." });
+  if(req.params.amount == null) return res.status(422).json({ "error" : "Ecrous insuffisants." });
   if(!req.params.to) return res.status(422).json({ "error" : "Adresse manquante." });
   if(!web3.isAddress(req.params.to) || req.params.to === nullAddress) return res.status(422).json({ "error" : "Adresse invalide." });
   else{
@@ -130,14 +131,14 @@ exports.transfer = function(req,res,next){
 };
 
 exports.pay = function pay(from, amount, callback){
-  if(!amount) return callback("Montant manquant.");
+  if(amount == null) return callback("Ecrous insuffisants.");
   if(!from) return callback("Adresse manquante.");
   if(!web3.isAddress(from) || from === nullAddress) return callback("Adresse invalide.");
   else{
     Labank.reduce(from, amount, { from : coinbase, gas : 1000000 }, function(err, transactionHash){
-      waitToBeMined(transactionHash, function(){
+      waitToBeMined(transactionHash, function(mined, msg){
         if(err) return callback(err);
-        else return callback(null, transactionHash);
+        else return callback(null, msg);
       });
     });
   }

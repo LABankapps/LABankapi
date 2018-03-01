@@ -6,8 +6,34 @@ const Contract = web3.eth.contract(compiledContract.abi);
 const coinbase = web3.eth.coinbase;
 const gasEstimate = web3.eth.estimateGas({data: compiledContract.bytecode});
 
-// deploy new contract
+function waitToBeMined(txnHash, callback){
+  var transactionReceiptAsync;
+  var interval = 500;
+  var timeout = 10000;
+  transactionReceiptAsync = function(txnHash) {
+    console.log("pending transaction...");
+    var receipt = web3.eth.getTransactionReceipt(txnHash);
+    console.log(receipt);
+    if (receipt == null) {
+      if(timeout <= timeout) return callback(false, "Mining timeout exceeded (10s) Miners may be not mining");
+      else{
+        setTimeout(function () {
+          timeout -= interval;
+          transactionReceiptAsync(txnHash);
+        }, interval);
+      }
+    } else {
+      return callback(true, address);
+    }
+  };
+  transactionReceiptAsync(txnHash);
+}
+
 Contract.new({ data : compiledContract.bytecode, from: coinbase, gas: gasEstimate+10000 }, function(err, myContract){
-  console.log("hash " + myContract.transactionHash);
-  console.log("address " + myContract.address); // the contract address
+  if(err) console.log(err);
+  console.log("transcation to be mined : " + myContract);
+  console.log("transcation to be mined : " + myContract);
+  // waitToBeMined(myContract.transactionHash, function(address){
+  //   console.log("transcation mined at address : " + address);
+  // });
 });
